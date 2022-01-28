@@ -9,7 +9,9 @@ https://www.docker.com/products/docker-desktop
 
 ### The env vars for Az CLI commands
 
-Let's define a few env variables (scoped to the current terminal) that the Az CLI commands refers later
+Let's define a few env variables (scoped to the current terminal) that the Az CLI commands refers later.
+
+Make sure to provide appropriate values for these env vars
 
 ```
 set resource_group=anuchan-rg1-aks1
@@ -74,7 +76,7 @@ type: Opaque
 
 Update <aks-namespace> to use the aks namespace we created above.
 
-The metatdata.name value i.e. 'java-eh-app-secret' is an identifier for the secrets; this identifier will be referenced from aks job definition (more on that later).
+The metatdata.name value i.e. 'java-eh-app-secret' is an identifier for the secrets; this identifier will be referenced from aks `job.yml` definition (more on that later).
 
 ### Base64 encode the secrets
 
@@ -88,13 +90,13 @@ Input to echo should be in single quotes
 echo '<eventhubs-connection-string>' | base64
 ```
 
-Use the output to replace <eventhubs-connection-string-base65-encoded> in secrets.yml
+Use the output to replace `<eventhubs-connection-string-base65-encoded>` in secrets.yml
 
 ```
 echo '<storage-connection-string>' | base64
 ```
 
-Use the output to replace <storage-connection-string-base65-encoded> in secrets.yml
+Use the output to replace `<storage-connection-string-base65-encoded>` in secrets.yml
 
 ### Assign the secrets to the aks namespace
 
@@ -201,7 +203,7 @@ Flight Recorder for the `receiver` and `sender` containers.
 
 For `receiver` container port 1088 is declared to accept JMX connection from a remote host (e.g., from our dev box), similarly 1099 for `sender` container.
 
-To connect to the flight recorder running on the containers using Java Mission Controller (JMC) in your box, we first need to forward the ports (e.g., 1088 and 1099) to port in your dev box. Use the following command for port forwarding -
+To connect to the flight recorder running on the containers using Java/Azul Mission Control in your box, we first need to forward the ports (e.g., 1088 and 1099) to port in your dev box. Use the following command for port forwarding -
 
 ```
 kubectl port-forward -n %aks_namespace% java-eh-app-zzjjq 1088:1088
