@@ -74,7 +74,7 @@ metadata:
 type: Opaque
 ```
 
-Update <aks-namespace> to use the aks namespace we created above.
+Update `<aks-namespace>` to use the aks namespace we created above.
 
 The metatdata.name value i.e. 'java-eh-app-secret' is an identifier for the secrets; this identifier will be referenced from aks `job.yml` definition (more on that later).
 
