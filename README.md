@@ -123,7 +123,7 @@ docker build -t %container_registry%.azurecr.io/eventhubs-eventhubs-scenarios-5.
 ## Push the docker image to ACR linked to AKS
 
 ```
-az acr login -n %anuchanaksacr%.azurecr.io
+az acr login -n %container_registry%.azurecr.io
 
 docker push %container_registry%.azurecr.io/eventhubs-eventhubs-scenarios-5.10.4:latest
 ```
