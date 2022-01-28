@@ -1,0 +1,69 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: java-eh-app
+  namespace: anuchan-eh-app-ns
+spec:
+  backoffLimit: 4
+  completions: 1
+  parallelism: 1
+  template:
+    spec:
+      nodeSelector:
+        agentpool: nodepool1
+      containers:
+        - env:
+            - name: AZURE_EVENTHUBS_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  key: AZURE_EVENTHUBS_CONNECTION_STRING
+                  name: java-eh-app-secret
+            - name: AZURE_STORAGE_CONN_STR
+              valueFrom:
+                secretKeyRef:
+                  key: AZURE_STORAGE_CONN_STR
+                  name: java-eh-app-secret
+            - name: AZURE_EVENTHUBS_EVENT_HUB_NAME
+              value: eh_parition_32_0
+            - name: AZURE_EVENTHUBS_CONSUMER_GROUP
+              value: '$default'
+            - name: UPDATE_CHECKPOINT
+              value: 'YES'
+            - name: AZURE_STORAGE_CONTAINER_NAME
+              value: checkpoint
+            - name: JAVA_TOOL_OPTIONS
+              value: '-XX:+FlightRecorder -XX:StartFlightRecording=settings=profile,filename=jfr_rec.jfr -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1088 -Dcom.sun.management.jmxremote.rmi.port=1088 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Djava.rmi.server.hostname=localhost'
+          image: anuchanaksacr.azurecr.io/eventhubs-eventhubs-scenarios-5.10.4:latest
+          command: ["java"]
+          args: ["org.springframework.boot.loader.JarLauncher", "--scenario=ReceiveAsync"]
+          imagePullPolicy: Always
+          name: receiver
+        - env:
+            - name: AZURE_EVENTHUBS_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  key: AZURE_EVENTHUBS_CONNECTION_STRING
+                  name: java-eh-app-secret
+            - name: AZURE_STORAGE_CONN_STR
+              valueFrom:
+                secretKeyRef:
+                  key: AZURE_STORAGE_CONN_STR
+                  name: java-eh-app-secret
+            - name: AZURE_EVENTHUBS_EVENT_HUB_NAME
+              value: eh_parition_32_0
+            - name: AZURE_EVENTHUBS_CONSUMER_GROUP
+              value: '$default'
+            - name: RESET_CHECKPOINT
+              value: 'YES'
+            - name: UPDATE_CHECKPOINT
+              value: 'YES'
+            - name: AZURE_STORAGE_CONTAINER_NAME
+              value: checkpoint
+            - name: JAVA_TOOL_OPTIONS
+              value: '-XX:+FlightRecorder -XX:StartFlightRecording=settings=profile,filename=jfr_rec.jfr -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.rmi.port=1099 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Djava.rmi.server.hostname=localhost'
+          image: anuchanaksacr.azurecr.io/eventhubs-eventhubs-scenarios-5.10.4:latest
+          command: ["java"]
+          args: ["org.springframework.boot.loader.JarLauncher", "--scenario=SendAsync"]
+          imagePullPolicy: Always
+          name: sender
+      restartPolicy: Never
