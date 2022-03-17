@@ -12,6 +12,7 @@ temp/
 # Sensitive files
 *.json.env
 secrets.yml
+docker-env-vars.txt
 
 #javadoc overview files generated from README.md
 readme_overview.html

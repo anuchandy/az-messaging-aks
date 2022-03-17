@@ -12,7 +12,6 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <acrServer>anuchanaksacr</acrServer>
     <eventhubVersion>5.10.4</eventhubVersion>
     <checkpointVersion>1.10.0</checkpointVersion>
     <maven.compiler.source>11</maven.compiler.source>

@@ -11,3 +11,12 @@ COPY --from=builder application/spring-boot-loader/ ./
 COPY --from=builder application/snapshot-dependencies/ ./
 COPY --from=builder application/application/ ./
 
+## iproute2, iptables and tc in container so that pumba can manage network.
+RUN apk --no-cache add iproute2 \
+  iptables
+RUN ln -s /usr/lib/tc /lib/tc
+
+## app: run the app
+ENTRYPOINT ["java", \
+ "org.springframework.boot.loader.JarLauncher", \
+ "--scenario=ReceiveAsync"]
