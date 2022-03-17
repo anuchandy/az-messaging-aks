@@ -1,12 +1,11 @@
 ## Emulating network failures
 
-This branch has a version of the project which enables us to troubleshoot the ServiceBus and EventHubs recovery routes under network failure emulation. 
+This branch has a version of the project which enables us to troubleshoot the ServiceBus and EventHubs recovery routes under network failure emulation using docker container. The `main` branch is all about deploying to AKS+debugging, network failure emulation was not a topic.
 
-
-1. Unlike the main branch, the project in this branch is supposed to run on a local docker container. The main branch targets AKS.
+1. Unlike the `main` branch, the project in this branch is supposed to run on a local docker container.
 2. The DockerFile in this branch is different from the main in the following ways -
     - It enables iproute2, iptables, and tc so that, from the local machine, we can drive the network failures in the docker container running the SB|EH send-receive scenarios.
-    - Since we're running as a docker instance (not on AKS), there is no job.yml; hence DockerFile defines "entrypoint" for JVM.
+    - Since we're running as a docker instance the DockerFile defines "entrypoint" for JVM.
 
 ## How to run the project and emulate network - Using SB as an example
 
@@ -53,8 +52,8 @@ The --name is optional; without that, Docker will generate a unique name for the
 
 > pumba netem --duration 10m delay --time 120000 anutcontainer
 
-The last argument refers to the docker container we named in step 3
-The command adds 2 minutes (120000 ms) delay for all outgoing packets for 10 minutes.
+The last argument refers to the docker container we named in step 8.
+The command adds 2 minutes (120000 ms) delay for all outgoing packets for 10 minutes in the target container instance.
 
 Another example:
 
